@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Mis cuentas</title>
+</head>
+<body>
+<section>
+    <div class="alert alert-success" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-header py-4 px-4">
+            <h3 class="card-title" style="font-size:1.5rem">Mis Cuentas</h3> 
+            <div class="card-tools">
+                <a th:href="@{/cuentas/nuevo}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Nueva cuenta
+                </a>
+            </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+                <thead>
+                    <tr><th>Cuenta</th><th class="text-center">Tipo</th><th class="text-right">Saldo</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="c : ${cuentas}">
+                        <td th:text="${c.nombreCuenta}"></td>
+                        <td class="text-center"><span class="badge badge-info" th:text="${c.categoria.categoria}"></span></td>
+                        <td class="text-right" th:text="${'S/ ' + #numbers.formatDecimal(c.saldo, 1, 2)}"></td>
+                        <td class="text-right">
+                            <a th:href="@{/cuentas/{id}/editar(id=${c.id})}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                            <form th:action="@{/cuentas/{id}/eliminar(id=${c.id})}" method="post" class="d-inline"
+                                  onsubmit="return confirm('¿Eliminar esta cuenta?')">
+                                <button class="btn btn-sm btn-outline-danger" title="Eliminar cuenta">
+                                    <i class="fa fa-trash"></i>
+                                </button>                            
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(cuentas)}">
+                        <td colspan="5" class="text-center text-muted py-4">Aún no hay cuentas registradas.</td>
+                    </tr>                
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>
